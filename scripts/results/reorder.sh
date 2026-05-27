@@ -66,7 +66,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 	echo -e "\t:: Reordering reference matrix"
 
 	#Test reordering variants
-	for kmcomp in bitpacking no_dm_vptree; do
+	for kmcomp in bitpacking no_dm_vptree_fix_masking; do
 		TOOL=$BMS/BMS_${kmcomp}/build/main_bitmatrixshuffle
 		INPUT=$TMP_DIR/${index}_ref.cmbf
 		OUTPUT=$TMP_DIR/xxx

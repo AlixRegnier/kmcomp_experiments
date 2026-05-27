@@ -56,8 +56,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 	echo -e "\tConfig: ${CONFIG}"
 
 	#Test TSP variants of NN
-	#for kmcomp in no_dm_nn no_dm_vptree no_dm_naive_vptree; do
-	for kmcomp in no_dm_vptree_fix_masking no_dm_naive_vptree; do
+	for kmcomp in no_dm_nn no_dm_vptree_fix_masking no_dm_naive_vptree; do
 		ORDER=$TMP_DIR/order_${index}_${kmcomp}.bin
 		TOOL=$BMS_DIR/BMS_${kmcomp}/build/main_bitmatrixshuffle
 		INPUT=$TMP_DIR/$REF_MATRIX
@@ -70,7 +69,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 			echo -e "\t\t$i"
 
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_${kmcomp}_$i.txt"
-	                export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_$i.txt"
+	        export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_$i.txt"
 
 			monitor_cmd $TOOL -i $INPUT -c $SAMPLES --header 49 -t $ORDER -z $OUTPUT -s 10000 --config-path $CONFIG -j "$MTC_DIR/metrics_${index}_${kmcomp}_$i.json"
 		done

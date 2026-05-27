@@ -70,7 +70,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		echo -e "\t\tComputed order to: $ORDER"
 
 		export MEASURED_LOGFILE="$LOG_DIR/${index}_${s}_ref.txt"
-                export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_ref.txt"
+        export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_ref.txt"
 
 		monitor_cmd $TOOL -i $INPUT -s $s --wlog 16 -b 65536 -c $SAMPLES --header 49 -t $ORDER -j "$MTC_DIR/metrics_${index}_${s}_ref.json" -z $OUTPUT --config-path $CONFIG
 		compressed_size=$(($compressed_size + $(stat -c "%s" $OUTPUT) + $(stat -c "%s" $OUTPUT.ef)))

@@ -59,8 +59,8 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 	ORDER=$TMP_DIR/order_${index}.bin
 	echo -e "\t:: Computing path TSP"
-	$BMS_DIR/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -b 65536 --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null
-	echo "\$\$\$ $BMS_DIR/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -b 65536 --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null"
+	$BMS_DIR/BMS_no_dm_vptree_fix_masking/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -b 65536 --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null
+	echo "\$\$\$ $BMS_DIR/BMS_no_dm_vptree_fix_masking/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -b 65536 --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null"
 	echo -e "\t\tComputed order to: $ORDER"
 	echo -e "\t:: Reordering reference matrix"
 
