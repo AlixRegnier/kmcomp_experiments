@@ -25,9 +25,18 @@ apptainer build container.sif recipe.def
   * Reorder all matrices in ``your_run/matrices`` with ``kmcomp`` using a single permutation (see ``-t`` and ``-f`` options)
 4. Run ``install_kmcomp.sh``
 
-## Benchmark
+## Datasets
 
-Once **setup** is complete:
+Used datasets:
+|Dataset|#samples|Link|
+|:--|--:|:--:|
+|Ecoli|3,682|[link](https://doi.org/10.5281/zenodo.6577997)|
+|Human gut metagenome|31,223|[link](https://arken.nmbu.no/~larssn/humgut/)|
+|Senterica|150,000|[link](http://ftp.ebi.ac.uk/pub/databases/ENA2018-bacteria-661k)|
+
+## Benchmark
+*Note: you may need to install kmindex to benchmark query times*  
+Once **setup** is complete: 
 
 1. Run ``gen_results.sh``
 1. Run ``gen_figures.sh``
