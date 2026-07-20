@@ -16,7 +16,7 @@ monitor_cmd() {
     export MEASURED_COMMAND="$@"
 
     # Write out usage values
-    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\"\n\t\"time(s)\": $MEASURED_WALL_TIME\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
+    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\",\n\t\"time(s)\": $MEASURED_WALL_TIME,\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
     export MEASURED_WALL_TIME="NaN"
     export MEASURED_RSS_MEMORY="NaN"
     export MEASURED_COMMAND="NaN"

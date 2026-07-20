@@ -3,10 +3,10 @@
 source vars.sh
 
 # Extract repo name without .git
-for BRANCH in no_dm_nn no_dm_vptree_zstd_wlog no_dm_naive_vptree no_dm_vptree_fix_masking bitpacking; do
-  TARGET_DIR="$BMS_DIR/BMS_exp_${BRANCH}"
+for BRANCH in no_dm_nn no_dm_vptree bitpacking; do
+  TARGET_DIR="$BMS_DIR/BMS_${BRANCH}"
+  echo $TARGET_DIR
+  git clone --branch "exp_$BRANCH" --single-branch "$KMCOMP_GIT" "$TARGET_DIR"
 
-  git clone --branch "$BRANCH" --single-branch "$KMCOMP_GIT" "$TARGET_DIR"
-
-  apptainer exec --bind $BMS_DIR container.sif "bash ./build.sh"
+  apptainer exec --bind $TARGET_DIR --pwd $TARGET_DIR container.sif "./build.sh"
 done
