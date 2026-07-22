@@ -8,9 +8,9 @@ types = ["ECOLI", "SENTERICA", "HUMANGUT"]
 def __r(x):
     return int(read_lines_from_file(x)[0])
 
-ECOLI = [  __r("./metrics/compression/ECOLI_no_reorder_size.txt"),  __r("./metrics/compression/ECOLI_size.txt")]
-SENTERICA = [ __r("./metrics/compression/SENTERICA_no_reorder_size.txt"),  __r("./metrics/compression/SENTERICA_size.txt") ]
-HUMANGUT= [  __r("./metrics/compression/HUMANGUT_no_reorder_size.txt"),  __r("./metrics/compression/HUMANGUT_size.txt") ]
+ECOLI = [  __r(f"{EXP_DIR}/metrics/compression/ECOLI_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/ECOLI_size.txt")]
+SENTERICA = [ __r(f"{EXP_DIR}/metrics/compression/SENTERICA_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/SENTERICA_size.txt") ]
+HUMANGUT= [  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_size.txt") ]
 
 permutation_time = {}
 reorder_time = {}
@@ -25,17 +25,17 @@ for type in types:
     c_n_time = []
 
     for x in range(10):
-        d = get_dict_from_json(f"./metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
         p_time.append(d["3_time_permutation(s)"])
 
-        d = get_dict_from_json(f"./metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
         c_time.append(d["3_time_compression(s)"])
 
     for x in [0,1,2,3,4,5,6,"ref"]:
-        d = get_dict_from_json(f"./metrics/compression/metrics_{type}_no_reorder_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/compression/metrics_{type}_no_reorder_{x}.json")
         c_n_time.append(d["3_time_compression(s)"])
 
-        d = get_dict_from_json(f"./metrics/reorder/metrics_{type}_no_dm_vptree_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/reorder/metrics_{type}_no_dm_vptree_{x}.json")
         r_time.append(d["3_time_reorder(s)"])
 
     

@@ -24,9 +24,6 @@ monitor_cmd() {
     echo "\$\$\$ $@"
 }
 
-
-source vars.sh
-
 EXP_NAME="query"
 TMP_DIR=$EXP_DIR/tmp_dir/$EXP_NAME
 LOG_DIR=$EXP_DIR/logs/$EXP_NAME
@@ -39,7 +36,7 @@ mkdir -p $LOG_DIR #Logs
 mkdir -p $USG_DIR #Usage
 mkdir -p $MTC_DIR #Metrics
 
-#rm -rf "${TMP_DIR}/*"
+rm -rf "${TMP_DIR}/*"
 
 date
 echo ":: Starting"
@@ -84,9 +81,6 @@ for index in ECOLI SENTERICA HUMANGUT; do
 			done
 		done
 	done
-
-	#Clean temporary directory
-	#rm -rf "${TMP_DIR}/*"
 done
 
 echo "Done!"

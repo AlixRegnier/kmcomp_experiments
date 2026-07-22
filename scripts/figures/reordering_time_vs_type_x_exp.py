@@ -14,7 +14,7 @@ for exp in exps:
     for type in types:
         s = []
         for x in [0,1,2,3,4,5,6,"ref"]:
-            d = get_dict_from_json(f"./metrics/reorder/metrics_{type}_{exp}_{x}.json")
+            d = get_dict_from_json(f"{EXP_DIR}/metrics/reorder/metrics_{type}_{exp}_{x}.json")
             s.append(d[value_name])
     
         

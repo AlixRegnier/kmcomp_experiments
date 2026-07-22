@@ -15,7 +15,7 @@ for exp in exps:
     for type in types:
         s = []
         for x in range(10):
-            d = get_dict_from_json(f"./metrics/permutation/metrics_{type}_{exp}_{x}.json")
+            d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_{exp}_{x}.json")
             s.append(d[value_name])
 
         ddf["exps"].append(exp)

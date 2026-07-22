@@ -16,15 +16,13 @@ monitor_cmd() {
     export MEASURED_COMMAND="$@"
 
     # Write out usage values
-    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\"\n\t\"time(s)\": $MEASURED_WALL_TIME\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
+    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\",\n\t\"time(s)\": $MEASURED_WALL_TIME,\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
     export MEASURED_WALL_TIME="NaN"
     export MEASURED_RSS_MEMORY="NaN"
     export MEASURED_COMMAND="NaN"
 
     echo "\$\$\$ $@"
 }
-
-source vars.sh
 
 EXP_NAME="reorder"
 TMP_DIR=$EXP_DIR/tmp_dir/$EXP_NAME
@@ -49,8 +47,8 @@ for index in ECOLI SENTERICA HUMANGUT; do
 	RUN_DIR="${!RUN_DIR}"
 	echo "Run dir: ${RUN_DIR}"
 
-	echo -e "\tRef matrix: $RUN_DIR/matrices/${index}_ref.cmbf"
-	cp $RUN_DIR/matrices/$REF_MATRIX $TMP_DIR/${index}_ref.cmbf
+	echo -e "\tRef matrix: $RUN_DIR/matrices/original/$REF_MATRIX"
+	cp $RUN_DIR/matrices/original/$REF_MATRIX $TMP_DIR/${index}_ref.cmbf
 
 	SAMPLES=$(cat $RUN_DIR/kmtricks.fof | wc -l)
 	echo -e "\tSamples: ${SAMPLES}"
@@ -60,14 +58,14 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 	ORDER=$TMP_DIR/order_${index}.bin
 	echo -e "\t:: Computing path TSP"
-	$BMS/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER --config-path $CONFIG >/dev/null
-	echo "\$\$\$ $BMS/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -z $TMP_DIR/block_${index}_ref -t $ORDER >/dev/null"
+	$KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -s 10000 --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER --config-path $CONFIG >/dev/null
+	echo "\$\$\$ $KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -s 10000 --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER >/dev/null"
 	echo -e "\t\tComputed order to: $ORDER"
 	echo -e "\t:: Reordering reference matrix"
 
 	#Test reordering variants
-	for kmcomp in bitpacking no_dm_vptree_fix_masking; do
-		TOOL=$BMS/BMS_${kmcomp}/build/main_bitmatrixshuffle
+	for kmcomp in bitpacking no_dm_vptree; do
+		TOOL=$KMCOMP_DIR/${kmcomp}/build/kmcomp
 		INPUT=$TMP_DIR/${index}_ref.cmbf
 		OUTPUT=$TMP_DIR/xxx
 		echo -e "\t\t$kmcomp"
@@ -79,15 +77,15 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 	#Reorder each matrices (ref+7 to estimate global x32)
 	for kmcomp in bitpacking no_dm_vptree; do
-		TOOL=$BMS/BMS_${kmcomp}/build/main_bitmatrixshuffle
+		TOOL=$KMCOMP_DIR/${kmcomp}/build/kmcomp
 		echo -e "\t\t$kmcomp"
 
 		for i in {0..6}; do
 			echo -e "\t\t$i"
-			cp $RUN_DIR/matrices/matrix_${i}.cmbf $TMP_DIR/matrix_${i}.cmbf
+			cp $RUN_DIR/matrices/original/matrix_${i}.cmbf $TMP_DIR/matrix_${i}.cmbf
+
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_${kmcomp}_${i}.txt"
-	                export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_${i}.txt"
-			#here
+			export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_${i}.txt"
 			monitor_cmd $TOOL -i $TMP_DIR/matrix_${i}.cmbf -z $TMP_DIR/xxx -c $SAMPLES --header 49 -f $ORDER -j "$MTC_DIR/metrics_${index}_${kmcomp}_${i}.json" --config-path $CONFIG
 		done
 	done

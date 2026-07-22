@@ -19,10 +19,10 @@ for type in types:
             s_uncompressed = []
             s = []
             for x in range(1,5):
-                d_uncompressed = get_dict_from_json(f"./usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}_uncompressed.txt")
+                d_uncompressed = get_dict_from_json(f"{EXP_DIR}/usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}_uncompressed.txt")
                 s_uncompressed.append(d_uncompressed[value_name])
                 
-                d = get_dict_from_json(f"./usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}.txt")
+                d = get_dict_from_json(f"{EXP_DIR}/usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}.txt")
                 s.append(d[value_name])
 
             #π-compressed

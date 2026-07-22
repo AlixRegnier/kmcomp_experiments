@@ -10,9 +10,9 @@ types = ["ECOLI", "SENTERICA", "HUMANGUT"]
 def __r(x):
     return int(read_lines_from_file(x)[0])
 
-ECOLI = [RAW_ECOLI, __r("./metrics/compression/ECOLI_no_reorder_size.txt"),  __r("./metrics/compression/ECOLI_size.txt")]
-SENTERICA = [RAW_SENTERICA,  __r("./metrics/compression/SENTERICA_no_reorder_size.txt"),  __r("./metrics/compression/SENTERICA_size.txt") ]
-HUMANGUT= [RAW_HUMANGUT,  __r("./metrics/compression/HUMANGUT_no_reorder_size.txt"),  __r("./metrics/compression/HUMANGUT_size.txt") ]
+ECOLI = [RAW_ECOLI, __r(f"{EXP_DIR}/metrics/compression/ECOLI_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/ECOLI_size.txt")]
+SENTERICA = [RAW_SENTERICA,  __r(f"{EXP_DIR}/metrics/compression/SENTERICA_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/SENTERICA_size.txt") ]
+HUMANGUT= [RAW_HUMANGUT,  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_size.txt") ]
 
         
 # Sample data

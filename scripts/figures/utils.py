@@ -7,6 +7,11 @@ RAW_ECOLI = 17991315712
 RAW_SENTERICA = 963993612544
 RAW_HUMANGUT = 29671305472
 
+import os
+EXP_DIR = os.environ['EXP_DIR']
+
+if not EXP_DIR:
+    raise Exception("EXP_DIR variable is not set, make sure vars.sh has been sourced.")
 
 def get_dict_from_json(filename : str) -> Dict[str,str]:
     with open(filename, "r") as f:

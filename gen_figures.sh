@@ -1,9 +1,10 @@
 #!/bin/bash
 
-DIR=./scripts/figures
-mkdir -p $DIR
+source vars.sh
 
-for script in $DIR/*.py; do
-    python3 $script
+mkdir -p ./figures
+
+for script in ./scripts/figures/*.py; do
     echo $script
+    python3 $script
 done

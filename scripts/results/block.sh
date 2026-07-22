@@ -16,15 +16,13 @@ monitor_cmd() {
     export MEASURED_COMMAND="$@"
 
     # Write out usage values
-    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\"\n\t\"time(s)\": $MEASURED_WALL_TIME\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
+    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\",\n\t\"time(s)\": $MEASURED_WALL_TIME,\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
     export MEASURED_WALL_TIME="NaN"
     export MEASURED_RSS_MEMORY="NaN"
     export MEASURED_COMMAND="NaN"
 
     echo "\$\$\$ $@"
 }
-
-source vars.sh
 
 EXP_NAME="block"
 TMP_DIR=$EXP_DIR/tmp_dir/$EXP_NAME
@@ -59,8 +57,8 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 	ORDER=$TMP_DIR/order_${index}.bin
 	echo -e "\t:: Computing path TSP"
-	$BMS_DIR/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null
-	echo "\$\$\$ $BMS_DIR/BMS_no_dm_vptree/build/main_bitmatrixshuffle -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -z $TMP_DIR/block_${index}_ref -t $ORDER >/dev/null"
+	$KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES --header 49 -z $TMP_DIR/temp -t $ORDER --config-path $CONFIG >/dev/null
+	echo "\$\$\$ $KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -z $TMP_DIR/block_${index}_ref -t $ORDER >/dev/null"
 	echo -e "\t\tComputed order to: $ORDER"
 	echo -e "\t:: Reordering reference matrix"
 
@@ -71,7 +69,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		twopower=$(echo "2 ^ $size" | bc)
 		CONFIG=$TMP_DIR/config_${index}_${twopower}.cfg
 
-		TOOL=$BMS_DIR/BMS_no_dm_vptree_zstd_wlog/build/main_bitmatrixshuffle
+		TOOL=$KMCOMP_DIR/no_dm_vptree_wlog/build/kmcomp
 		INPUT=$TMP_DIR/${index}_ref.cmbf
 		OUTPUT=$TMP_DIR/block_${index}_${twopower}_ref
 		OUTPUT_NO_REORDER=$TMP_DIR/block_${index}_${twopower}_no_reorder_ref
@@ -80,11 +78,11 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 		export MEASURED_LOGFILE="$LOG_DIR/${index}_${twopower}_ref.txt"
         export MEASURED_USAGEFILE="$USG_DIR/${index}_${twopower}_ref.txt"
-		$TOOL -i $INPUT -z $OUTPUT -c $SAMPLES --header 49 -s 10000 -b $twopower --wlog $size -f $ORDER -j "$MTC_DIR/metrics_${index}_${twopower}_ref.json" --config-path $CONFIG
+		monitor_cmd $TOOL -i $INPUT -z $OUTPUT -c $SAMPLES --header 49 -s 10000 -b $twopower --wlog $size -f $ORDER -j "$MTC_DIR/metrics_${index}_${twopower}_ref.json" --config-path $CONFIG
 
 		export MEASURED_LOGFILE="$LOG_DIR/${index}_${twopower}_no_reorder_ref.txt"
         export MEASURED_USAGEFILE="$USG_DIR/${index}_${twopower}_no_reorder_ref.txt"
-		$TOOL -i $INPUT -z $OUTPUT_NO_REORDER -c $SAMPLES --header 49 -s 10000 -b $twopower --wlog $size -n -j "$MTC_DIR/metrics_${index}_${twopower}_no_reorder_ref.json" --config-path $CONFIG
+		monitor_cmd $TOOL -i $INPUT -z $OUTPUT_NO_REORDER -c $SAMPLES --header 49 -s 10000 -b $twopower --wlog $size -n -j "$MTC_DIR/metrics_${index}_${twopower}_no_reorder_ref.json" --config-path $CONFIG
 		twopower=$(echo "2 ^ $size" | bc)
 
 		compressed_size=$(($compressed_size + $(stat -c "%s" $OUTPUT) + $(stat -c "%s" $OUTPUT.ef)))
@@ -117,10 +115,6 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		echo -e "$twopower\t$compressed_size" >> $MTC_DIR/${index}_size.txt
 		echo -e "$twopower\t$compressed_no_reorder_size" >> $MTC_DIR/${index}_no_reorder_size.txt
 	done
-
-	#Clean temporary directory
-	#rm -rf "${TMP_DIR}/*"
-
 done
 
 echo "Done!"

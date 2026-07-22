@@ -16,15 +16,13 @@ monitor_cmd() {
     export MEASURED_COMMAND="$@"
 
     # Write out usage values
-    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\"\n\t\"time(s)\": $MEASURED_WALL_TIME\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
+    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\",\n\t\"time(s)\": $MEASURED_WALL_TIME,\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
     export MEASURED_WALL_TIME="NaN"
     export MEASURED_RSS_MEMORY="NaN"
     export MEASURED_COMMAND="NaN"
 
     echo "\$\$\$ $@"
 }
-
-source vars.sh
 
 EXP_NAME="subsample"
 TMP_DIR=$EXP_DIR/tmp_dir/$EXP_NAME
@@ -39,7 +37,7 @@ mkdir -p $LOG_DIR #Logs
 mkdir -p $USG_DIR #Usage
 mkdir -p $MTC_DIR #Metrics
 
-#rm -rf "${TMP_DIR}/*"
+rm -rf "${TMP_DIR}/*"
 
 date
 echo ":: Starting"
@@ -62,7 +60,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		compressed_size=0
 
 		ORDER=$TMP_DIR/order_${index}_${s}.bin
-		TOOL=$BMS/BMS_no_dm_vptree_zstd_wlog/build/main_bitmatrixshuffle
+		TOOL=$KMCOMP_DIR/no_dm_vptree/build/kmcomp
 		INPUT=$RUN_DIR/matrices/original/$REF_MATRIX
 		OUTPUT=$TMP_DIR/block_${index}_${s}
 		echo -e "\tSubsample size: $s"
@@ -71,16 +69,19 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 		export MEASURED_LOGFILE="$LOG_DIR/${index}_${s}_ref.txt"
         export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_ref.txt"
+		monitor_cmd $TOOL -i $INPUT -s $s -b 65536 -c $SAMPLES --header 49 -t $ORDER -j "$MTC_DIR/metrics_${index}_${s}_ref.json" -z $OUTPUT --config-path $CONFIG
 
-		monitor_cmd $TOOL -i $INPUT -s $s --wlog 16 -b 65536 -c $SAMPLES --header 49 -t $ORDER -j "$MTC_DIR/metrics_${index}_${s}_ref.json" -z $OUTPUT --config-path $CONFIG
 		compressed_size=$(($compressed_size + $(stat -c "%s" $OUTPUT) + $(stat -c "%s" $OUTPUT.ef)))
 		rm $OUTPUT $OUTPUT.ef
+
 		for i in {0..6}; do
 			INPUT=$RUN_DIR/matrices/original/matrix_${i}.cmbf
 			OUTPUT=$TMP_DIR/block_${index}_${s}
+
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_${s}_${i}.txt"
 			export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_${i}.txt"
-			monitor_cmd $TOOL -i $INPUT -c $SAMPLES --header 49 --wlog 16 -b 65536 -f $ORDER -j /dev/null -z $OUTPUT --config-path $CONFIG "$MTC_DIR/metrics_${index}_${s}_${i}.json" -z $OUTPUT --config-path $CONFIG
+			monitor_cmd $TOOL -i $INPUT -c $SAMPLES --header 49 -b 65536 -f $ORDER -j "$MTC_DIR/metrics_${index}_${s}_${i}.json" -z $OUTPUT --config-path $CONFIG
+
 			compressed_size=$(($compressed_size + $(stat -c "%s" $OUTPUT) + $(stat -c "%s" $OUTPUT.ef)))
 			rm $OUTPUT $OUTPUT.ef
 		done
@@ -89,10 +90,6 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		compressed_size=$((32 * $compressed_size))
 		echo -e "$s\t$compressed_size" >> $MTC_DIR/${index}_size.txt
 	done
-
-	#Clean temporary directory
-	#rm -rf "${TMP_DIR}/*"
-
 done
 
 echo "Done!"

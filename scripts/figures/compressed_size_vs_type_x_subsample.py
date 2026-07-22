@@ -5,14 +5,14 @@ import pandas as pd
 exps = [100, 200, 500, 1000, 10000, 20000, 50000, 100000]
 types = ["ECOLI", "SENTERICA", "HUMANGUT"]
 
-ECOLI_d = get_dict_from_delimited_file("./metrics/subsample/ECOLI_size.txt")
+ECOLI_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/ECOLI_size.txt")
 ECOLI = [int(ECOLI_d[str(exp)]) for exp in exps]
 
 
-HUMANGUT_d = get_dict_from_delimited_file("./metrics/subsample/HUMANGUT_size.txt")
+HUMANGUT_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/HUMANGUT_size.txt")
 HUMANGUT = [int(HUMANGUT_d[str(exp)]) for exp in exps]
 
-SENTERICA_d = get_dict_from_delimited_file("./metrics/subsample/SENTERICA_size.txt")
+SENTERICA_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/SENTERICA_size.txt")
 SENTERICA = [int(SENTERICA_d[str(exp)]) for exp in exps]
 
 

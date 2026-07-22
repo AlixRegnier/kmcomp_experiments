@@ -18,12 +18,8 @@ python3 (matplotlib plotnine)
 ```bash
 apptainer build container.sif recipe.def
 ```
-2. Edit file ``vars.sh`` with your own configuration
-3. In each of your kmindex indexes:
-  * Create a directory called ``original``
-  * Copy all matrices in this directory
-  * Reorder all matrices in ``your_run/matrices`` with ``kmcomp`` using a single permutation (see ``-t`` and ``-f`` options)
-4. Run ``install_kmcomp.sh``
+2. Edit file ``vars.sh`` for customizing paths (notably indexes paths)
+3. Run ``install.sh`` while being in same directory than the script
 
 ## Datasets
 
@@ -34,6 +30,7 @@ Used datasets:
 |Human gut metagenome|31,223|[link](https://arken.nmbu.no/~larssn/humgut/)|
 |Senterica|150,000|[link](http://ftp.ebi.ac.uk/pub/databases/ENA2018-bacteria-661k)|
 
+We indexed k-mers of size 26 with a false positive rate of 25%. Later on, queries false-positive are drastically reduced because when querying any 31-mer, we query its 26-mers.
 ## Benchmark
 *Note: you may need to install kmindex to benchmark query times*  
 Once **setup** is complete: 

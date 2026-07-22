@@ -7,22 +7,22 @@ blocksize = [65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 
 
 types = ["ECOLI", "SENTERICA", "HUMANGUT", "ECOLI_NO_REORDER", "SENTERICA_NO_REORDER", "HUMANGUT_NO_REORDER"]
 
-ECOLI_d = get_dict_from_delimited_file("./metrics/block/ECOLI_size.txt")
+ECOLI_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/ECOLI_size.txt")
 ECOLI = [int(ECOLI_d[str(b)]) for b in blocksize]
 
-HUMANGUT_d = get_dict_from_delimited_file("./metrics/block/HUMANGUT_size.txt")
+HUMANGUT_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/HUMANGUT_size.txt")
 HUMANGUT = [int(HUMANGUT_d[str(b)]) for b in blocksize]
 
-SENTERICA_d = get_dict_from_delimited_file("./metrics/block/SENTERICA_size.txt")
+SENTERICA_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/SENTERICA_size.txt")
 SENTERICA = [int(SENTERICA_d[str(b)]) for b in blocksize]
 
-ECOLI_NO_REORDER_d = get_dict_from_delimited_file("./metrics/block/ECOLI_no_reorder_size.txt")
+ECOLI_NO_REORDER_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/ECOLI_no_reorder_size.txt")
 ECOLI_NO_REORDER = [int(ECOLI_NO_REORDER_d[str(b)]) for b in blocksize]
 
-HUMANGUT_NO_REORDER_d = get_dict_from_delimited_file("./metrics/block/HUMANGUT_no_reorder_size.txt")
+HUMANGUT_NO_REORDER_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/HUMANGUT_no_reorder_size.txt")
 HUMANGUT_NO_REORDER = [int(HUMANGUT_NO_REORDER_d[str(b)]) for b in blocksize]
 
-SENTERICA_NO_REORDER_d = get_dict_from_delimited_file("./metrics/block/SENTERICA_no_reorder_size.txt")
+SENTERICA_NO_REORDER_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/block/SENTERICA_no_reorder_size.txt")
 SENTERICA_NO_REORDER = [int(SENTERICA_NO_REORDER_d[str(b)]) for b in blocksize]
 
 # Assign each curve to a facet
