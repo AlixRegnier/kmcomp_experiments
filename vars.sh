@@ -13,7 +13,7 @@ export MAIN_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 export KMCOMP_GIT="https://github.com/AlixRegnier/kmcomp.git"
 export KMCOMP_DIR=$(abspath "$MAIN_DIR/kmcomp")
 
-export KMINDEX_DIR="https://github.com/tlemane/kmindex.git"
+export KMINDEX_GIT="https://github.com/tlemane/kmindex.git"
 export KMINDEX_COMMIT_HASH="fede5fa6959b8d5cde827157ed39bf2bbde284a1"
 export KMINDEX_DIR=$(abspath "$MAIN_DIR/kmindex")
 
