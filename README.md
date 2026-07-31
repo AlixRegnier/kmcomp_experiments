@@ -18,7 +18,7 @@ python3 (matplotlib plotnine)
 ```bash
 apptainer build container.sif recipe.def
 ```
-2. Edit file ``vars.sh`` for customizing paths (notably indexes paths)
+2. *[optional]* Edit file ``vars.sh`` for customizing paths (notably indexes paths).
 3. Run ``install.sh`` while being in same directory than the script
 
 ## Datasets
