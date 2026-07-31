@@ -4,27 +4,27 @@ import pandas as pd
 
 exps = [100, 200, 500, 1000, 10000, 20000, 50000, 100000]
 types = ["ECOLI", "SENTERICA", "HUMANGUT"]
-value = "2a_computed_distances"
+value_name = "2a_computed_distances"
 
-ddf = {"exps": [], "types": [], value : [] }
+ddf = {"exps": [], "types": [], value_name : [] }
 
 
 for exp in exps:
     for type in types:
         s = []
-        for x in [0,1,2,3,4,5,6,"ref"]:
+        for x in ["ref"]: #[0,1,2,3,4,5,6,"ref"]:
             d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/metrics_{type}_{exp}_{x}.json")
-            s.append(d[value])
+            s.append(d[value_name])
 
         ddf["exps"].append(exp)
         ddf["types"].append(type)
-        ddf[value].append(sum(s)/len(s))
+        ddf[value_name].append(sum(s)/len(s))
 
 # Sample data
 df = pd.DataFrame({
     "category": ddf["exps"],
     "group":    ddf["types"],
-    "value":    ddf[value]
+    "value":    ddf[value_name]
 })
 
 

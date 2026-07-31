@@ -25,10 +25,10 @@ for type in types:
     c_n_time = []
 
     for x in range(10):
-        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_{x}.json")
         p_time.append(d["3_time_permutation(s)"])
 
-        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_fix_masking_{x}.json")
+        d = get_dict_from_json(f"{EXP_DIR}/metrics/permutation/metrics_{type}_no_dm_vptree_{x}.json")
         c_time.append(d["3_time_compression(s)"])
 
     for x in [0,1,2,3,4,5,6,"ref"]:

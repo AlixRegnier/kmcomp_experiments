@@ -2,7 +2,7 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = ["no_dm_nn", "no_dm_naive_vptree", "no_dm_vptree_fix_masking"]
+exps = ["no_dm_nn", "no_dm_naive_vptree", "no_dm_vptree"]
 exps_pretty = dict(zip(exps, ["brute-force", "vp-tree", "masked vp-tree"]))
 
 types = ["ECOLI", "SENTERICA", "HUMANGUT"]

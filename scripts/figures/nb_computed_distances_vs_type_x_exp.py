@@ -8,7 +8,7 @@ exps_pretty = dict(zip(exps, ["brute-force", "vp-tree", "masked vp-tree"]))
 types = ["ECOLI", "SENTERICA", "HUMANGUT"]
 value_name = "2a_computed_distances"
 
-ddf = {"exps": [], "exps_pretty": [], "types": [] }
+ddf = {"exps": [], "exps_pretty": [], "types": [], value_name : [] }
 
 
 for exp in exps:
