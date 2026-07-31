@@ -43,5 +43,5 @@ Once **setup** is complete:
 1. Run ``gen_figures.sh``
 
 ## Note :warning:
-The number of experiment repetitions is sometimes set to 1 to speed up the process, so the scripts used to generate the figures may be subject to variability in execution times. Notably for the order computation that can be long (so option ``-f`` is set instead of ``-t`` in some kmcomp commands.
+The number of experiment repetitions is sometimes set to 1 to speed up the process, so the scripts used to generate the figures may be subject to variability in execution times. Notably for the order computation that can be long (so option ``-f`` is set instead of ``-t`` in some kmcomp commands).
 
