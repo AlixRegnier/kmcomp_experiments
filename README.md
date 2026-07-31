@@ -31,9 +31,18 @@ Used datasets:
 |Senterica|150,000|[link](http://ftp.ebi.ac.uk/pub/databases/ENA2018-bacteria-661k)|
 
 We indexed k-mers of size 26 with a false positive rate of 25%. Later on, queries false-positive are drastically reduced because when querying any 31-mer, we query its 26-mers.
+
+k-mer matrices are already downloaded, decompressed and reordered back by pipeline. It uses this archive:
+[https://zenodo.org/records/21509986](https://zenodo.org/records/21509986)
+
 ## Benchmark
 *Note: you may need to install kmindex to benchmark query times*  
 Once **setup** is complete: 
 
 1. Run ``gen_results.sh``
 1. Run ``gen_figures.sh``
+
+## Note
+
+The number of experiment repetitions is sometimes set to 1 to speed up the process, so the scripts used to generate the figures may be subject to variability in execution times. 
+
