@@ -1,28 +1,6 @@
 #!/bin/bash
 
-export MEASURED_LOGFILE="logs.txt"
-export MEASURED_USAGEFILE="usage.txt"
-
-monitor_cmd() {
-    local time_output
-
-    # Run the command with /usr/bin/time and capture its output
-    echo "Timed command: $@" > "$MEASURED_LOGFILE"
-    time_output=$(/usr/bin/time -f "%e %M" "$@" 2>&1 >> "$MEASURED_LOGFILE" | tail -n 1 | sed 's/.*\r//')
-
-    # Extract wall time and RSS memory from the output
-    export MEASURED_WALL_TIME=$(echo "$time_output" | cut -f1 -d' ')
-    export MEASURED_RSS_MEMORY=$(echo "$time_output" | cut -f2 -d' ')
-    export MEASURED_COMMAND="$@"
-
-    # Write out usage values
-    echo -e "{\n\t\"command\": \"$MEASURED_COMMAND\",\n\t\"time(s)\": $MEASURED_WALL_TIME,\n\t\"memory(KB)\": $MEASURED_RSS_MEMORY\n}" > "$MEASURED_USAGEFILE"
-    export MEASURED_WALL_TIME="NaN"
-    export MEASURED_RSS_MEMORY="NaN"
-    export MEASURED_COMMAND="NaN"
-
-    echo "\$\$\$ $@"
-}
+source vars.sh
 
 EXP_NAME="reorder"
 TMP_DIR=$EXP_DIR/tmp_dir/$EXP_NAME
@@ -47,45 +25,33 @@ for index in ECOLI SENTERICA HUMANGUT; do
 	RUN_DIR="${!RUN_DIR}"
 	echo "Run dir: ${RUN_DIR}"
 
-	echo -e "\tRef matrix: $RUN_DIR/matrices/original/$REF_MATRIX"
-	cp $RUN_DIR/matrices/original/$REF_MATRIX $TMP_DIR/${index}_ref.cmbf
+	echo "Ref matrix: $RUN_DIR/matrices/${index}_ref.cmbf"
+	cp $RUN_DIR/matrices/$REF_MATRIX $TMP_DIR/${index}_ref.cmbf
 
 	SAMPLES=$(cat $RUN_DIR/kmtricks.fof | wc -l)
-	echo -e "\tSamples: ${SAMPLES}"
+	echo "Samples: ${SAMPLES}"
 
 	CONFIG=$TMP_DIR/config_${index}.cfg
-	echo -e "\tConfig: ${CONFIG}"
+	echo "Config: ${CONFIG}"
 
 	ORDER=$TMP_DIR/order_${index}.bin
-	echo -e "\t:: Computing path TSP"
-	$KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -s 10000 --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER --config-path $CONFIG >/dev/null
-	echo "\$\$\$ $KMCOMP_DIR/no_dm_vptree/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES -s 10000 --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER >/dev/null"
-	echo -e "\t\tComputed order to: $ORDER"
-	echo -e "\t:: Reordering reference matrix"
+	echo "Computing path TSP"
+	$KMCOMP_DIR/KMCOMP_v0.2/build/kmcomp -i $TMP_DIR/${index}_ref.cmbf -c $SAMPLES --header 49 -z $TMP_DIR/block_${index}_ref -t $ORDER -e 10.0 --config-path $CONFIG
+	echo "Computed order to: $ORDER"
+	echo "Reordering reference matrix"
 
-	#Test reordering variants
-	for kmcomp in bitpacking no_dm_vptree; do
-		TOOL=$KMCOMP_DIR/${kmcomp}/build/kmcomp
-		INPUT=$TMP_DIR/${index}_ref.cmbf
-		OUTPUT=$TMP_DIR/xxx
-		echo -e "\t\t$kmcomp"
-		export MEASURED_LOGFILE="$LOG_DIR/${index}_${kmcomp}_ref.txt"
-        export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_ref.txt"
+	#Reorder each matrices (repeated x10)
+	for kmcomp in exp_bitpacking v0.2; do
+		TOOL=$KMCOMP_DIR/KMCOMP_${kmcomp}/build/kmcomp
+		echo -e "$kmcomp"
 
-		monitor_cmd $TOOL -i $INPUT -z $OUTPUT -c $SAMPLES --header 49 -f $ORDER -j "$MTC_DIR/metrics_${index}_${kmcomp}_ref.json" --config-path $CONFIG
-	done
-
-	#Reorder each matrices (ref+7 to estimate global x32)
-	for kmcomp in bitpacking no_dm_vptree; do
-		TOOL=$KMCOMP_DIR/${kmcomp}/build/kmcomp
-		echo -e "\t\t$kmcomp"
-
-		for i in {0..6}; do
-			echo -e "\t\t$i"
-			cp $RUN_DIR/matrices/original/matrix_${i}.cmbf $TMP_DIR/matrix_${i}.cmbf
-
+		for i in {0..9}; do
+			echo "$i"
+			rm $CONFIG
+			cp $RUN_DIR/matrices/matrix_${i}.cmbf $TMP_DIR/matrix_${i}.cmbf
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_${kmcomp}_${i}.txt"
-			export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_${i}.txt"
+	                export MEASURED_USAGEFILE="$USG_DIR/${index}_${kmcomp}_${i}.txt"
+			drop_caches
 			monitor_cmd $TOOL -i $TMP_DIR/matrix_${i}.cmbf -z $TMP_DIR/xxx -c $SAMPLES --header 49 -f $ORDER -j "$MTC_DIR/metrics_${index}_${kmcomp}_${i}.json" --config-path $CONFIG
 		done
 	done
