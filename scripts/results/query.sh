@@ -55,19 +55,19 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 				#Avoid repeating queries on uncompressed index
 				if [ $size -eq 32 ]; then
-					export MEASURED_LOGFILE="$LOG_DIR/${index}_query_f${n}_${size}_${i}_uncompressed.txt"
-					export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${size}_${i}_uncompressed.txt"
+					export MEASURED_LOGFILE="$LOG_DIR/${index}_query_f${n}_${i}_uncompressed.txt"
+					export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${i}_uncompressed.json"
 					drop_caches
 					monitor_cmd $TOOL query -i $INDEX_DIR --uncompressed -z 6 -n index_${index} -o ${OUTPUT}_uncompressed -q $QUERY -t $CPUS --fast --single
 
-					export MEASURED_LOGFILE="$LOG_DIR/${index}_query2_f${n}_${size}_${i}_uncompressed.txt"
-					export MEASURED_USAGEFILE="$USG_DIR/${index}_query2_f${n}_${size}_${i}_uncompressed.txt"
+					export MEASURED_LOGFILE="$LOG_DIR/${index}_query2_f${n}_${i}_uncompressed.txt"
+					export MEASURED_USAGEFILE="$USG_DIR/${index}_query2_f${n}_${i}_uncompressed.json"
 					drop_caches
 					monitor_cmd $TOOL query2 -i $INDEX_DIR --uncompressed -z 6 -n index_${index} -o ${OUTPUT2}_uncompressed -q $QUERY -t $CPUS --single
 				fi
 
 				export MEASURED_LOGFILE="$LOG_DIR/${index}_query2_f${n}_${size}_${i}.txt"
-				export MEASURED_USAGEFILE="$USG_DIR/${index}_query2_f${n}_${size}_${i}.txt"
+				export MEASURED_USAGEFILE="$USG_DIR/${index}_query2_f${n}_${size}_${i}.json"
 				drop_caches
 				monitor_cmd $TOOL query2 -i $INDEX_DIR -z 6 -n index_${index} -o $OUTPUT2 -q $QUERY -t $CPUS --single
 			done

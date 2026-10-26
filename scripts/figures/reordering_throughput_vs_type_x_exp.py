@@ -2,28 +2,27 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = ["bitpacking", "no_dm_vptree"]
+exps = ["exp_bitpacking", "v0.2"]
 exps_pretty = dict(zip(exps, ["Bitpacking", "Double\nbit matrix\ntransposition"]))
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 value_name = "3_time_reorder(s)"
 
-size = dict(zip(types, [RAW_ECOLI//256, RAW_SENTERICA//256, RAW_HUMANGUT//256]))
+size = dict(zip(indexes, [RAW_ECOLI//256, RAW_SENTERICA//256, RAW_HUMANGUT//256]))
 
 ddf = {"exps": [], "exps_pretty": [], "types": [], value_name: [] }
 
 
 for exp in exps:
-    for type in types:
+    for index in indexes:
         s = []
-        for x in [0,1,2,3,4,5,6,"ref"]:
-            d = get_dict_from_json(f"{EXP_DIR}/metrics/reorder/metrics_{type}_{exp}_{x}.json")
+        for x in range(10):
+            d = get_dict_from_json(f"{EXP_DIR}/metrics/reorder/metrics_{index}_{exp}_{x}.json")
             s.append(d[value_name])
-    
-        
+
         ddf["exps"].append(exp)
         ddf["exps_pretty"].append(exps_pretty[exp])
-        ddf["types"].append(type)
-        ddf[value_name].append(size[type] / (sum(s)/len(s))) # size / time -> throughput
+        ddf["types"].append(index)
+        ddf[value_name].append(size[index] / (sum(s)/len(s))) # size / time -> throughput
 
         
 

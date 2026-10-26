@@ -2,22 +2,22 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = [100, 200, 500, 1000, 10000, 20000, 50000, 100000]
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
+exps = [100, 1000, 10000, 20000, 50000, 100000]
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 value_name = "2a_computed_distances"
 
 ddf = {"exps": [], "types": [], value_name : [] }
 
 
 for exp in exps:
-    for type in types:
+    for index in indexes:
         s = []
-        for x in ["ref"]: #[0,1,2,3,4,5,6,"ref"]:
-            d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/metrics_{type}_{exp}_{x}.json")
+        for i in range(5):
+            d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/metrics_{index}_{exp}_ref_{i}.json")
             s.append(d[value_name])
 
         ddf["exps"].append(exp)
-        ddf["types"].append(type)
+        ddf["types"].append(index)
         ddf[value_name].append(sum(s)/len(s))
 
 # Sample data
@@ -45,7 +45,7 @@ plot = (
     #     color="black"
     # ) +
     scale_color_manual(palette_3) +
-    scale_y_continuous(labels=lambda x: [KM_label(val) for val in x]) + 
+    scale_y_continuous(labels=lambda x: [scientific_float(val) for val in x]) + 
     scale_x_log10(breaks=exps) +
     theme_light() +
     facet_wrap("group", ncol=1, scales="free_y") +

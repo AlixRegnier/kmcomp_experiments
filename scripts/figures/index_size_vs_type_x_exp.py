@@ -2,25 +2,32 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = ["no compression", "compressed", "π-compressed"]
+exps = ["raw", "compressed", "picompressed"]
+exps_pretty = ["raw", "compressed", "π-compressed"]
 
-
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 
 def __r(x):
     return int(read_lines_from_file(x)[0])
 
-ECOLI = [RAW_ECOLI, __r(f"{EXP_DIR}/metrics/compression/ECOLI_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/ECOLI_size.txt")]
-SENTERICA = [RAW_SENTERICA,  __r(f"{EXP_DIR}/metrics/compression/SENTERICA_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/SENTERICA_size.txt") ]
-HUMANGUT= [RAW_HUMANGUT,  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_no_reorder_size.txt"),  __r(f"{EXP_DIR}/metrics/compression/HUMANGUT_size.txt") ]
+category_order = []
+category = []
+value = []
+group = []
 
-        
+for index in indexes:
+    d = get_dict_from_json(f"{EXP_DIR}/tmp_dir/picompression/size_{index}_64kb.json")
+    group.extend([index]*len(d))
+    category_order.extend([*range(len(exps))])
+    category.extend(exps_pretty)
+    value.extend([d[x] for x in exps])
+
 # Sample data
 df = pd.DataFrame({
-    "category": exps*len(types),
-    "category_order": [*range(len(exps))]*len(types),
-    "group":    ["ECOLI"]*len(exps) + ["HUMANGUT"]*len(exps) + ["SENTERICA"]*len(exps),
-    "value":    ECOLI + HUMANGUT + SENTERICA
+    "category": category,
+    "category_order": category_order,
+    "group":    group,
+    "value":    value
 })
 
 df['value'] = df['value'].apply(lambda x: x/1024/1024/1024)

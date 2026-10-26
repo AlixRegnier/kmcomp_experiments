@@ -2,7 +2,7 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = [100, 200, 500, 1000, 10000, 20000, 50000, 100000]
+exps = [100, 1000, 10000, 20000, 50000, 100000]
 types = ["ECOLI", "SENTERICA", "HUMANGUT"]
 value_name = "3_time_permutation(s)"
 
@@ -12,8 +12,8 @@ ddf = {"exps": [], "types": [], value_name: [] }
 for exp in exps:
     for type in types:
         s = []
-        for x in ["ref"]: #[0,1,2,3,4,5,6,"ref"]:
-            d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/metrics_{type}_{exp}_{x}.json")
+        for x in range(5):
+            d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/metrics_{type}_{exp}_ref_{x}.json")
             s.append(d[value_name])
 
         ddf["exps"].append(exp)

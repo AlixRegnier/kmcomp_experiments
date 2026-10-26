@@ -37,13 +37,13 @@ for index in ecoli senterica humangut; do
 
 			OUTPUT=$TMP_DIR/${index}_query_result_${n}_${i}_uncompressed.txt
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_query_f${n}_${i}_uncompressed.txt"
-			export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${i}_uncompressed.txt"
+			export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${i}_uncompressed.json"
 			drop_caches
 			monitor_cmd $TOOL pseudoalign -i "$INDEX_DIR/index.fur" -t $CPUS -q $QUERY -o $OUTPUT
 
 			OUTPUT=$TMP_DIR/${index}_query_result_${n}_${i}_md.txt
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_query_f${n}_${i}_md.txt"
-			export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${i}_md.txt"
+			export MEASURED_USAGEFILE="$USG_DIR/${index}_query_f${n}_${i}_md.json"
 			drop_caches
 			monitor_cmd $TOOL pseudoalign -i "$INDEX_DIR/index.mdfur" -t $CPUS -q $QUERY -o $OUTPUT
 		done

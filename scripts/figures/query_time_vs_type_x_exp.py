@@ -2,27 +2,24 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-BLOCKSIZE = [65536]
-STR_BLOCKSIZE = ["64kB"]
+BLOCKSIZE = [64]
 
 value_name = "time(s)"
 
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 
 ddf = { "blocksize": [], "querysize": [], "shape": [], "type": [], "value": [], "curve": [] }
 
-DICT_BSIZE = dict(zip(BLOCKSIZE, STR_BLOCKSIZE))
-
-for type in types:
+for index in indexes:
     for bsize in BLOCKSIZE:
         for qsize in [150, 150000]:
             s_uncompressed = []
             s = []
-            for x in range(1,5):
-                d_uncompressed = get_dict_from_json(f"{EXP_DIR}/usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}_uncompressed.txt")
+            for x in range(20):
+                d_uncompressed = get_dict_from_json(f"{EXP_DIR}/usage/query/{index}_query_f{qsize}_{x}_uncompressed.json")
                 s_uncompressed.append(d_uncompressed[value_name])
-                
-                d = get_dict_from_json(f"{EXP_DIR}/usage/query/{type}_query2_f{qsize}_{DICT_BSIZE[bsize]}_{x}.txt")
+
+                d = get_dict_from_json(f"{EXP_DIR}/usage/query/{index}_query2_f{qsize}_{bsize}_{x}.json")
                 s.append(d[value_name])
 
 
@@ -30,19 +27,17 @@ for type in types:
             ddf["blocksize"].append(bsize)
             ddf["querysize"].append(qsize)
             ddf["shape"].append("π-compressed")
-            ddf["type"].append(type)
+            ddf["type"].append(index)
             ddf["value"].append(sum(s)/len(s))
-            ddf["curve"].append(f"{type}_{qsize}")
+            ddf["curve"].append(f"{index}_{qsize}")
 
             #Not compressed
             ddf["blocksize"].append(bsize)
             ddf["querysize"].append(qsize)
             ddf["shape"].append("not compressed")
-            ddf["type"].append(type)
+            ddf["type"].append(index)
             ddf["value"].append(sum(s_uncompressed)/len(s_uncompressed))
-            ddf["curve"].append(f"{type}_{qsize}_uncompressed")
-
-            
+            ddf["curve"].append(f"{index}_{qsize}_uncompressed")
 
 
 # Sample data

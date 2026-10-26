@@ -48,7 +48,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 		#Repeat computation of pi for clearer computation estimation
 		for i in {0..4}; do
 			export MEASURED_LOGFILE="$LOG_DIR/${index}_${s}_ref_${i}.txt"
-		        export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_ref_${i}.txt"
+		    export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_ref_${i}.json"
 			drop_caches
 			monitor_cmd $TOOL -i $INPUT -s $s -b 65536 -c $SAMPLES --header 49 -t $ORDER -j "$MTC_DIR/metrics_${index}_${s}_ref_${i}.json" -z $OUTPUT --config-path $CONFIG
 			rm $OUTPUT $OUTPUT.ef

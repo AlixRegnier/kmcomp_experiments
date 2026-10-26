@@ -33,7 +33,7 @@ export APPTAINER_BIND_DIRS="$INDEXES_DIR"
 
 #Experimental variables
 export REF_MATRIX=matrix_1.cmbf #Reference matrix to use
-export EXP_DIR=$(abspath "$MAIN_DIR/exps")
+export EXP_DIR=$(abspath "$MAIN_DIR")
 export QRY_DIR=$(abspath "$MAIN_DIR/query")
 export QRY_CPUS=1
 

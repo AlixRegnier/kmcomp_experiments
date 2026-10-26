@@ -51,7 +51,6 @@ plot = (
     theme(axis_text_x=element_text(rotation=23, hjust=1)) + 
     facet_wrap("group", ncol=3, scales="free_y") +
     labs(x='Experiment', y='Number of computed distances', fill="Dataset", color="Dataset")
-    
 )
 
 save_as_pdf_pages([plot + theme(figure_size=FIG_SIZE)], "./figures/nb_computed_distances_vs_type_x_exp.pdf")

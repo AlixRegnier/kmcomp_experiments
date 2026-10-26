@@ -2,10 +2,6 @@ from typing import Dict, List
 from math import log10, floor
 import json
 
-#Constants
-RAW_ECOLI = 17991315712
-RAW_SENTERICA = 963993612544
-RAW_HUMANGUT = 29671305472
 
 import os
 EXP_DIR = os.environ['EXP_DIR']
@@ -175,3 +171,7 @@ palette_3 = ["#A8DADC", "#6D6875", "#B5838D"]
 palette_3_2 = [color for color in palette_3 for _ in range(2)]
 palette_logan = ["#482677", "#2D708E", "#29AF7F" ]
 FIG_SIZE = (8,6)
+
+RAW_ECOLI = get_dict_from_json(f"{EXP_DIR}/tmp_dir/picompression/size_ECOLI_32kb.json")["raw"]
+RAW_HUMANGUT = get_dict_from_json(f"{EXP_DIR}/tmp_dir/picompression/size_HUMANGUT_32kb.json")["raw"]
+RAW_SENTERICA = get_dict_from_json(f"{EXP_DIR}/tmp_dir/picompression/size_SENTERICA_32kb.json")["raw"]

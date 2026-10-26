@@ -2,50 +2,48 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = ["no_reorder_", ""]
+blocksize = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
+exps = ["compression", "picompression"]
 exps_pretty = dict(zip(exps, ["compressed", "π-compressed"]))
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
-value_name = "3_time_compression(s)"
-ddf = { "exps" : [], "exps_pretty": [], "types" : [], value_name : [] }
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 
+category = []
+group = []
+value = []
+shape = []
+
+i = 0
 for exp in exps:
-    for type in types:
-        s = []
-        for x in [0,1,2,3,4,5,6,"ref"]:
-            d = get_dict_from_json(f"{EXP_DIR}/metrics/compression/metrics_{type}_{exp}{x}.json")
-            s.append(d[value_name])
-
-        ddf["exps"].append(exp)
-        ddf["exps_pretty"].append(exps_pretty[exp])
-        ddf["types"].append(type)
-        ddf[value_name].append(sum(s)/len(s))
-
-        
+    for index in indexes:
+        for size in blocksize:
+            d = get_dict_from_json(f"{EXP_DIR}/usage/picompression/usage_{exp}_{index}_{size}kb.json")
+            value.append(d["time(s)"])
+            shape.append(exps_pretty[exp])
+            category.append(size)
+            group.append(index)
+        i += 1
 
 # Sample data
 df = pd.DataFrame({
-    "category": ddf["exps_pretty"],
-    "category_order": [*range(len(ddf["exps"]))],
-    "group":    ddf["types"],
-    "value":    ddf[value_name]
+    "category": category,
+    "category_order": [*range(len(category))],
+    "group":    group,
+    "value":    value
 })
 
 df['value_label'] = df['value'].apply(time_label)
 
 plot = (
-    ggplot(df, aes(x='reorder(category, category_order)', y='value', fill='group')) +
-    geom_col(position='dodge') +
-    # Add markers for capped values
-    geom_text(
-        mapping=aes(label='value_label'),
-        position=position_dodge(width=0.9),
-        size=8,
-        fontweight="semibold",
-        va='bottom'
-    ) +
-    scale_fill_manual(palette_3) +
+    ggplot(df, aes(x='category', y='value', color='group', group="group+shape", shape="shape")) +
+    geom_line(size=1) +
+    geom_point(size=3) +
+    scale_shape_manual(values=['^', 'o']) + 
+    scale_color_manual(palette_3*2) +
     theme_light() +
-    labs(x='Experiment', y='Time (s)', fill="Dataset", color="Dataset")
+    scale_x_log10(breaks=blocksize, labels=lambda x: [KMG_pow2(val*1024) for val in x]) +
+    scale_y_continuous(labels=lambda x: [time_label(val) for val in x]) + 
+    facet_wrap("group", ncol=1, scales="free_y") +
+    labs(x='Block size (logarithmic)', y='Time (s)', fill="Dataset", color="Dataset", shape="Compression")
 )
 
 #plot.show()

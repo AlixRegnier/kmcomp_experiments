@@ -35,7 +35,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 
 	#Test subsampling sizes
 	for s in 1000 10000 20000; do
-		echo -e "{" > $MTC_DIR/${index}_s${s}_size.txt
+		echo -e "{" > $MTC_DIR/${index}_s${s}_size.json
 
 		for e in 0 1 2 3 5 10 25 50 100 500 1000 10000; do
 			compressed_size=0
@@ -51,7 +51,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 			#Repeat computation of pi for clearer computation estimation
 			for i in {0..4}; do
 				export MEASURED_LOGFILE="$LOG_DIR/${index}_s${s}_e${e}_ref_${i}.txt"
-			        export MEASURED_USAGEFILE="$USG_DIR/${index}_s${s}_e${e}_ref_${i}.txt"
+			    export MEASURED_USAGEFILE="$USG_DIR/${index}_s${s}_e${e}_ref_${i}.json"
 				drop_caches
 				monitor_cmd $TOOL -i $INPUT -s $s -b 65536 -c $SAMPLES --header 49 -e $e -t $ORDER -j "$MTC_DIR/metrics_${index}_s${s}_e${e}_ref_${i}.json" -z $OUTPUT --config-path $CONFIG
 				rm $OUTPUT $OUTPUT.ef
@@ -64,7 +64,7 @@ for index in ECOLI SENTERICA HUMANGUT; do
 				INPUT=$RUN_DIR/matrices/original/matrix_${i}.cmbf
 				OUTPUT=$TMP_DIR/block_${index}_${s}
 				export MEASURED_LOGFILE="$LOG_DIR/${index}_${s}_${i}.txt"
-				export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_${i}.txt"
+				export MEASURED_USAGEFILE="$USG_DIR/${index}_${s}_${i}.json"
 				drop_caches
 				monitor_cmd $TOOL -i $INPUT -c $SAMPLES --header 49 -b 65536 -f $ORDER -j /dev/null -z $OUTPUT --config-path $CONFIG
 				compressed_size=$(($compressed_size + $(stat -c "%s" $OUTPUT) + $(stat -c "%s" $OUTPUT.ef)))
@@ -76,9 +76,9 @@ for index in ECOLI SENTERICA HUMANGUT; do
 			compressed_size=$((16 * $compressed_size))
 
 			if [ $e -eq 10000 ]; then
-				echo -e "\t\"$e\": $compressed_size\n}" >> $MTC_DIR/${index}_s${s}_size.txt
+				echo -e "\t\"$e\": $compressed_size\n}" >> $MTC_DIR/${index}_s${s}_size.json
 			else
-				echo -e "\t\"$e\": $compressed_size," >> $MTC_DIR/${index}_s${s}_size.txt
+				echo -e "\t\"$e\": $compressed_size," >> $MTC_DIR/${index}_s${s}_size.json
 			fi
 
 		done #epsilon

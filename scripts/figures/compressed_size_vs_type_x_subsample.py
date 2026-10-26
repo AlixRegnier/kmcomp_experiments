@@ -2,25 +2,29 @@ from utils import *
 from plotnine import *
 import pandas as pd
 
-exps = [100, 200, 500, 1000, 10000, 20000, 50000, 100000]
-types = ["ECOLI", "SENTERICA", "HUMANGUT"]
+indexes = ["ECOLI", "SENTERICA", "HUMANGUT"]
 
-ECOLI_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/ECOLI_size.txt")
-ECOLI = [int(ECOLI_d[str(exp)]) for exp in exps]
+exps = []
+category = []
+group = []
+value = []
 
+for index in indexes:
+    d = get_dict_from_json(f"{EXP_DIR}/metrics/subsample/{index}_size.json")
 
-HUMANGUT_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/HUMANGUT_size.txt")
-HUMANGUT = [int(HUMANGUT_d[str(exp)]) for exp in exps]
+    for exp in d:
+        category.append(int(exp))
+        group.append(index)
+        value.append(d[exp])
 
-SENTERICA_d = get_dict_from_delimited_file(f"{EXP_DIR}/metrics/subsample/SENTERICA_size.txt")
-SENTERICA = [int(SENTERICA_d[str(exp)]) for exp in exps]
+    exps = list(map(int, sorted(d.keys())))
 
 
 # Sample data
 df = pd.DataFrame({
-    "category": exps*len(types),
-    "group":    ["ECOLI"]*len(exps) + ["HUMANGUT"]*len(exps) + ["SENTERICA"]*len(exps),
-    "value":    ECOLI + HUMANGUT + SENTERICA
+    "category": category,
+    "group":    group,
+    "value":    value
 })
 
 df['value_label'] = df['value'].apply(MEGA_label)
